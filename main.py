@@ -1,8 +1,10 @@
 #Code to create API
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 import pickle
 import numpy as np
 from pydantic import BaseModel
+from typing import Annotated
+
 
 #Load ml model
 with open("mental_rating_model.pkl", "rb") as f:
@@ -20,4 +22,11 @@ class MentalData(BaseModel):
     exercise_frequency: int
     extracurricular_participation: int
 
-@app.get("/")
+#Grab user id from database
+#Runs the model
+@app.get("/users")
+async def grab_user_data(data: Annotated[MentalData, Form()]):
+    return data
+
+
+
