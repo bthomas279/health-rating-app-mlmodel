@@ -1,5 +1,6 @@
 # Machine Learning Model of the Student Health Rating App Project
 **IMPORTANT NOTICE: This project is still under development.**
+
 Planned Development
 1. FAST API integration
 2. Model optimizations
