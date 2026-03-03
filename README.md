@@ -18,8 +18,8 @@ health_rating_app_mlmodel
 ├──mental_rating_model.pkl          # Binary file of the ml model turned using pickle
 ├──model_opt1.ipynb                 # Code for the Random Forest Regresssor Model
 ├──main.py                          # Contains FAST API to build model into API
-├──scoring_norm.ipynb               # Houses the code that normalized health_dataset.csv (weights, relevent columns)
-└──
+└──scoring_norm.ipynb               # Houses the code that normalized health_dataset.csv (weights, relevent columns)
+
 
 
 ```

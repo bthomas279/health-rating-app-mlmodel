@@ -22,11 +22,12 @@ class MentalData(BaseModel):
     exercise_frequency: int
     extracurricular_participation: int
 
-#Grab user id from database
+
 #Runs the model
 @app.get("/users")
 async def grab_user_data(data: Annotated[MentalData, Form()]):
     return data
-
-
+#Run fastapi dev main.py to start the application
+#To access server http://127.0.0.1:8000
+#To access documentation: http://127.0.0.1:8000/docs
 
