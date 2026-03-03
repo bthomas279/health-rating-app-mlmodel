@@ -1,7 +1,7 @@
 #Code to create API
 from fastapi import FastAPI, Form
 import pickle
-import numpy as np
+import uvicorn
 from pydantic import BaseModel
 from typing import Annotated
 
@@ -24,10 +24,16 @@ class MentalData(BaseModel):
 
 
 #Runs the model
-@app.get("/users")
-async def grab_user_data(data: Annotated[MentalData, Form()]):
-    return data
-#Run fastapi dev main.py to start the application
+#Run uvicorn main:app --reload in terminal to start
 #To access server http://127.0.0.1:8000
 #To access documentation: http://127.0.0.1:8000/docs
+@app.post("/users/")
+async def grab_user_data(data: Annotated[MentalData, Form()]):
+    return data
+#Type in "fastapi dev main.py" in the console to start the application OR: 
+
+#Click the "run python file" button
+if __name__ == "__main__":
+    uvicorn.run("main:app", host = "127.0.0.1", port=8000, reload = True)
+
 
