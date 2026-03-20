@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 import joblib
 import uvicorn
 from pydantic import BaseModel
+import pandas as pd
 
 #Load ml model
 model = joblib.load("mental_rating_model.pkl")
@@ -23,7 +24,9 @@ class MentalData(BaseModel):
     extracurricular_participation: int
 
 
-#Runs the model (starts on button submisssion)
+#Runs the model (starts on button submission)
+#Important note: User Warning will appear 
+
 @app.post("/grab/")
 async def data_grab(user: MentalData):
     #Transfer data to array
@@ -38,10 +41,13 @@ async def data_grab(user: MentalData):
         user.extracurricular_participation
     ]
     
-    #Have the model make the mental health rating
-    model_prediction = model.predict([user_features])
+    #Change to dataframe (to match what model accepts)
+    user_features_df = pd.DataFrame([user.dict()])
 
-    return JSONResponse({""
+    #Have the model make the mental health rating
+    model_prediction = model.predict(user_features_df)
+
+    return JSONResponse({
     "rating": model_prediction[0],
     "users_data": user.dict()
     })
