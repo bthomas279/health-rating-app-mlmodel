@@ -12,13 +12,13 @@ model = joblib.load("mental_rating_model.pkl")
 app = FastAPI(title="Mental Health Rating API")
 
 class MentalData(BaseModel):
-    study_hours_per_day: float
+    daily_study_hours: float
     social_media_hours: float
-    netflix_hours: float
+    tv_hours: float
     part_time_job: int
     sleep_hours: float
     diet_quality: int
-    exercise_frequency: int
+    exercise_frequency_weekly: int
     extracurricular_participation: int
 
 #Runs the model
@@ -28,7 +28,9 @@ class MentalData(BaseModel):
 
 @app.post("/grab/")
 async def data_grab(user: MentalData):
-    return {"data": user}
+    print(user)
+    print(user.dict())
+    return {"FastAPI got the data!"}
 #Type in "fastapi dev main.py" in the console to start the application OR: 
 
 #Click the "run python file" button
