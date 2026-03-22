@@ -29,17 +29,6 @@ class MentalData(BaseModel):
 
 @app.post("/grab/")
 async def data_grab(user: MentalData):
-    #Transfer data to array
-    user_features = [
-        user.daily_study_hours,
-        user.social_media_hours,
-        user.tv_hours,
-        user.part_time_job,
-        user.sleep_hours,
-        user.diet_quality,
-        user.exercise_frequency_weekly,
-        user.extracurricular_participation
-    ]
     
     #Change to dataframe (to match what model accepts)
     user_features_df = pd.DataFrame([user.dict()])
