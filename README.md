@@ -15,6 +15,8 @@ This repository houses the machine learning model for my student mental health r
 health_rating_app_mlmodel
 ├──health_dataset.csv               # Original dataset downloaded from Kaggle
 ├──nomalized_health_dataset.csv     # Normalized dataset containing relevent columns and consistent mental health scoring.
+├──quant_health_dataset.csv         # health_dataset.csv but only containing relevent columns and str are now float or int.
+├──reduced_health_dataset.csv       # health_dataset.csv but only containing relevent columns.
 ├──mental_rating_model.pkl          # Binary file of the ml model turned using pickle
 ├──model_opt1.ipynb                 # Code for the Random Forest Regresssor Model
 ├──main.py                          # Contains FAST API to build model into API
