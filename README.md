@@ -18,7 +18,7 @@ health_rating_app_mlmodel
 ├──quant_health_dataset.csv         # health_dataset.csv but only containing relevent columns and str are now float or int.
 ├──reduced_health_dataset.csv       # health_dataset.csv but only containing relevent columns.
 ├──mental_rating_model.pkl          # Binary file of the ml model turned using joblib
-├──model_opt1.ipynb                 # Code for the Random Forest Regresssor Model
+├──regression_model.ipynb           # Code for the Random Forest Regressor Model
 ├──main.py                          # Contains FAST API to build model into API
 └──scoring_norm.ipynb               # Houses the code that normalized health_dataset.csv (weights, relevent columns).
 
