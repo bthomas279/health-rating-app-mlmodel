@@ -2,8 +2,8 @@
 **IMPORTANT NOTICE: This project is still under development.**
 
 Planned Development
-1. FAST API integration
-2. Model optimizations
+1. Model optimizations
+
 
 ## About 
 This repository houses the machine learning model for my student mental health rating system.
