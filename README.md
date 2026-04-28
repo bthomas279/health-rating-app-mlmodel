@@ -3,6 +3,7 @@
 
 Planned Development
 1. Model optimizations
+2. Classification Model
 
 
 ## About 
