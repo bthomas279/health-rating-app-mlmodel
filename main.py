@@ -1,5 +1,5 @@
 #Code to create API
-from fastapi import FastAPI, Form
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import joblib
 import uvicorn
@@ -14,6 +14,7 @@ class_model = joblib.load("class_mental_rating_model.pkl")
 #Define App
 app = FastAPI(title="Mental Health Rating API")
 
+#Data Import Structures-------------------
 #Prepare Imported data fromat for Regression (Make sure they match)
 class MentalData(BaseModel):
     daily_study_hours: float
@@ -31,6 +32,12 @@ class PredictionRequest(BaseModel):
     model_type: Literal["Classification", "Regression", "Both"]
     data: MentalData
     
+#Request format for the columns the user wants to be plotted
+class PlotRequest(BaseModel):
+    plot_request: Literal["regRate", "classRate", "sleep", "study"]
+    id: int
+
+
 
 #Runs the model (starts on button submission)
 #Important note: User Warning will appear 
@@ -64,6 +71,11 @@ async def data_grab(request: PredictionRequest):
     "model_of_choice": request.model_type, 
     "users_data": request.data.dict()
     })
+
+@app.post("/plot/")
+async def plot_development(request: PlotRequest):
+    
+    return request
 
 
 #Type in "fastapi dev main.py" in the console to start the application OR: 
