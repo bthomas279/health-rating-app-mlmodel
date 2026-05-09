@@ -5,7 +5,8 @@ import joblib
 import uvicorn
 from pydantic import BaseModel
 import pandas as pd
-from typing import Literal
+from typing import Literal, Optional, List
+from datetime import datetime
 
 #Load ml models
 reg_model = joblib.load("mental_rating_model.pkl")
@@ -31,13 +32,24 @@ class MentalData(BaseModel):
 class PredictionRequest(BaseModel):
     model_type: Literal["Classification", "Regression", "Both"]
     data: MentalData
-    
+
 #Request format for the columns the user wants to be plotted
+class RowSelections(BaseModel):
+    #Rating columns
+    regression_ratings: Optional[float] = None
+    classification_ratings: Optional[str] = None
+
+    #Habit columns
+    study_hours: Optional[float] = None
+    sleep_hours: Optional[float] = None
+
+    #Created_at cloumn
+    time: datetime
+
+#Class for current user request
 class PlotRequest(BaseModel):
-    plot_request: Literal["regRate", "classRate", "sleep", "study"]
-    id: int
-
-
+    user_request: Literal["sleep", "study", "regRate", "classRate"]
+    data: List[RowSelections]
 
 #Runs the model (starts on button submission)
 #Important note: User Warning will appear 
@@ -74,8 +86,8 @@ async def data_grab(request: PredictionRequest):
 
 @app.post("/plot/")
 async def plot_development(request: PlotRequest):
-    
-    return request
+    df = pd.DataFrame([row.dict() for row in request.data])
+    return df
 
 
 #Type in "fastapi dev main.py" in the console to start the application OR: 
