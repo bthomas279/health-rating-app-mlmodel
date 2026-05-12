@@ -7,10 +7,17 @@ from pydantic import BaseModel
 import pandas as pd
 from typing import Literal, Optional, List
 from datetime import datetime
+from dotenv import load_dotenv
+import os
+
+#Define port
+load_dotenv()
+port = os.getenv("PORT")
 
 #Load ml models
 reg_model = joblib.load("mental_rating_model.pkl")
 class_model = joblib.load("class_mental_rating_model.pkl")
+
 
 #Define App
 app = FastAPI(title="Mental Health Rating API")
@@ -52,7 +59,7 @@ class PlotRequest(BaseModel):
     data: List[RowSelections]
 
 #Runs the model (starts on button submission)
-#Important note: User Warning will appear 
+#Important note: User Warning will appear
 @app.post("/predict/")
 async def data_grab(request: PredictionRequest):
     
@@ -86,16 +93,20 @@ async def data_grab(request: PredictionRequest):
 
 @app.post("/plot/")
 async def plot_development(request: PlotRequest):
+    
+    if request.user_request == "regRate":
+        x = 1
+    else:
+        x = 0
     df = pd.DataFrame([row.dict() for row in request.data])
-    return df
+    print(df)
+    return x
 
 
 #Type in "fastapi dev main.py" in the console to start the application OR: 
 
 #Click the "run python file" button
 if __name__ == "__main__":
-    uvicorn.run("main:app", host = "127.0.0.1", port=8000, reload = True)
+    uvicorn.run("main:app", host = "127.0.0.1", port=port, reload = True)
 
-#To access server http://127.0.0.1:8000
-#To access documentation: http://127.0.0.1:8000/docs
 
