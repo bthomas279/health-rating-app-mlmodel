@@ -10,6 +10,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import os
 
+
 #Define port
 load_dotenv()
 port = os.getenv("PORT")
@@ -40,6 +41,7 @@ class PredictionRequest(BaseModel):
     model_type: Literal["Classification", "Regression", "Both"]
     data: MentalData
 
+
 #Request format for the columns the user wants to be plotted
 class RowSelections(BaseModel):
     #Rating columns
@@ -58,8 +60,9 @@ class PlotRequest(BaseModel):
     user_request: Literal["sleep", "study", "regRate", "classRate"]
     data: List[RowSelections]
 
+
+#REQUESTS/RESPONSES------------------------------------
 #Runs the model (starts on button submission)
-#Important note: User Warning will appear
 @app.post("/predict/")
 async def data_grab(request: PredictionRequest):
     
