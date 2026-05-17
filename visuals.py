@@ -41,13 +41,57 @@ def default_style(fig: plt.Figure, axis: plt.Axes, title: str, xlabel: str, ylab
 
 #Function for graphic numerical ratings
 def numerical_plot(data: list[dict]) -> str:
-    """Creates the numerical rating plot. Should be expecting
+    """Creates the numerical rating plot (line plot). View regression ratings over time.
+
+    Important Features:
+        Skips rows when regression_ratings are null.
 
     """
+    #Grab non-null regression rows
+    rows = [row for row in data if row.regression_ratings is not None]
+    #Grab times
+    dates = [row.time.strftime("%Y-%m-%d") for row in rows]
+    #Grab ratings
+    ratings = [row.regression_ratings for row in rows]
+
+    #Determine plot size and characteristics
+    view, axis = plt.subplots(figsize=(9,4))
+    axis.plot(dates, ratings, marker="o", linewidth=2, color="#4C72B0", markersize=5)
+
+    axis.fill_between(dates, ratings, alpha=0.08, color="#4C72B0")
+
+    #For the x and y axis
+    axis.set_xticks(range(len(dates)))
+    axis.set_xticklabels(dates, rotation=45, ha="right", fontsize=8)
+    axis.set_ylim(0, 1) #Once I change the rating structure, make it 0 - 10
+
+
+    #Insert default style into plot
+    default_style(view, axis,title= "Mental Health Ratings (Numerical)",
+                  xlabel= "Date",
+                  ylabel= "Rating (0 - 1)") #Change rating label later
+    #Return plot
+    return base_transfer(view)
+
+
+
+def numerical_plot(data: list[dict]) -> str:
+    """Creates the categorical rating plot (bar chart). View the frequency of categorical ratings
+
+    Important Features:
+        Skips rows when classification_ratings are null.
+        Rating types are organized by severity
+
+    """
+    #Order and color of ratings
+    ORDER = ["Poor", "Fair", "Good"]
+    COLORS = ["#d73027", "#fff237", "#8aea6f"]
+
+    #Counter that calculates the number of ratings in each category
 
 
 
 
 
 
-
+    
