@@ -1,5 +1,6 @@
 #Code to create API
-from fastapi import FastAPI
+#Imports
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 import joblib
 import uvicorn
@@ -9,6 +10,9 @@ from typing import Literal, Optional, List
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+
+#Import chart functions
+from visuals import (numerical_plot, categorical_plot, sleep_hours_plot, study_hours_plot)
 
 
 #Define port
@@ -60,6 +64,13 @@ class PlotRequest(BaseModel):
     user_request: Literal["sleep", "study", "regRate", "classRate"]
     data: List[RowSelections]
 
+#Define valid types of strings and charts
+VALID_TYPES = {
+    "numerical_mental_health": numerical_plot,
+    "categorical_mental_health": categorical_plot,
+    "sleep_hours": sleep_hours_plot,
+    "study_hours": study_hours_plot,
+}
 
 #REQUESTS/RESPONSES------------------------------------
 #Runs the model (starts on button submission)
@@ -96,20 +107,20 @@ async def data_grab(request: PredictionRequest):
 
 @app.post("/plot/")
 async def plot_development(request: PlotRequest):
-    
-    if request.user_request == "regRate":
-        x = 1
-    else:
-        x = 0
-    df = pd.DataFrame([row.dict() for row in request.data])
-    print(df)
-    return x
+    choice = request.user_request
+    data = request.data
+    if choice == "regRate":
+        image_b64 = numerical_plot(data)
+   
+   
+ 
+    return {"image": image_b64, "type": choice}
 
 
 #Type in "fastapi dev main.py" in the console to start the application OR: 
 
 #Click the "run python file" button
 if __name__ == "__main__":
-    uvicorn.run("main:app", host = "127.0.0.1", port=port, reload = True)
+    uvicorn.run("main:app", host = "127.0.0.1", port=8000, reload = True)
 
 
