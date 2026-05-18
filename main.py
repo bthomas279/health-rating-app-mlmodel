@@ -107,14 +107,24 @@ async def data_grab(request: PredictionRequest):
 
 @app.post("/plot/")
 async def plot_development(request: PlotRequest):
-    choice = request.user_request
-    data = request.data
-    if choice == "regRate":
-        image_b64 = numerical_plot(data)
-   
-   
- 
-    return {"image": image_b64, "type": choice}
+    try:
+        choice = request.user_request
+        data = request.data
+        if choice == "regRate":
+            image_b64 = numerical_plot(data)
+        if choice == "classRate":
+            image_b64 = categorical_plot(data)
+        if choice == "sleep":
+            image_b64 = sleep_hours_plot(data)
+        if choice == "study":
+            image_b64 = study_hours_plot(data)
+    
+        return {"image": image_b64, "type": choice}
+    
+    #Find errors in plots
+    except Exception as e:
+        return {"error": type(e).__name__, "detail": str(e)}
+
 
 
 #Type in "fastapi dev main.py" in the console to start the application OR: 
