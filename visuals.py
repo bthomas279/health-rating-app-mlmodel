@@ -141,33 +141,44 @@ def categorical_plot(data: list[dict]) -> str:
     Important Features:
         Skips rows when classification_ratings are null.
         Rating types are organized by severity
-        Chart 
 
     """
-    #Order and color of ratings
+    #Create the order sequence of the plot
     ORDER = ["Poor", "Fair", "Good"]
-    COLORS = ["#d73027", "#fff237", "#8aea6f"]
+    #Create the color map of the keys (Red, Yellow, Green)
+    COLOR_MAP = {
+        "Low": "#d73027",
+        "Fair": "#fff237", 
+        "Good": "#8aea6f",
+     }
 
-    #Counter that calculates the number of ratings in each category
+    #Counter that calculates the number of ratings in each category.
+    #Counts how many times each category string appears across all rows.
     count_mapping = Counter(row.classification_ratings for row in data if row.classification_ratings is not None)
 
-    #Calculate the categories (similar to ) 
+    #Calculate the categories
     categories = [rate for rate in ORDER if rate in count_mapping] + \
                  [rate for rate in count_mapping if rate not in ORDER]
     
+    #Create parallel lists
     counts = [count_mapping[rate] for rate in categories]
 
-    #CHECK LITERALLY EVERYTHING BELOW LATER (To tired to check right now)
-    graph_colors = COLORS[:len(categories)] if len(categories) <= 5 else ["#4C72B0"] * len(categories)
+    #Connect the map and categroies together to their proper values if known
+    #else, fall back to the dark blue color (unlikely)
+    graph_colors = COLOR_MAP[:len(categories)] if len(categories) <= 5 else ["#4C72B0"] * len(categories)
 
+    #Config the plot
     view, axis = plt.subplots(figsize=(8, max(3, len(categories) * 0.8)))
     bars = axis.barh(categories, counts, color=graph_colors, edgecolor="white", height=0.55)
 
+    #Add the count labels the end of the bar for eavh category.
     for bar, count in zip(bars, counts):
         axis.text(bar.get_width() + 0.15, bar.get_y() + bar.get_height() / 2,
                 str(count), va="center", fontsize=10)
  
+    #Increase the \in-between space of the x-axis by 15%
     axis.set_xlim(0, max(counts) * 1.15)
+    #Create the plot with the default settings
     default_style(view, axis,
                 title="Mental Health Rating Distribution",
                 xlabel="Number of Days",
