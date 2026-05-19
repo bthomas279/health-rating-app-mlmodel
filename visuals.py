@@ -122,13 +122,13 @@ def numerical_plot(data: list[dict]) -> str:
     axis.set_xticklabels(dates, rotation=45, ha="right", fontsize=8)
     
     #Set Y axis range
-    axis.set_ylim(0, 1) #Once I change the rating structure, make it 0 - 10
+    axis.set_ylim(0, 10) #Once I change the rating structure, make it 0 - 10
 
 
     #Insert default style into plot
     default_style(view, axis, title= "Mental Health Ratings (Numerical)",
                   xlabel= "Date",
-                  ylabel= "Average Ratings (0 - 1)") #Change rating label later
+                  ylabel= "Average Ratings (0 - 10)") #Change rating label later
     #Return plot
     return base_transfer(view)
 

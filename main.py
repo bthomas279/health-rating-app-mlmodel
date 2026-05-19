@@ -87,7 +87,7 @@ async def data_grab(request: PredictionRequest):
     #Have the model make the mental health rating based on type
     #Only Regression
     if request.model_type == "Regression":
-        reg_model_prediction = reg_model.predict(user_features_df)
+        reg_model_prediction = reg_model.predict(user_features_df)*10
         class_model_prediction = None
     #Only classification
     elif request.model_type == "Classification":
@@ -95,9 +95,11 @@ async def data_grab(request: PredictionRequest):
         reg_model_prediction = None
     #Both
     else:
-        reg_model_prediction = reg_model.predict(user_features_df)
+        reg_model_prediction = reg_model.predict(user_features_df)*10
         class_model_prediction = class_model.predict(user_features_df)
 
+    if reg_model_prediction is not None:
+        reg_model_prediction = [round(value, 2) for value in reg_model_prediction]
     return JSONResponse({
     "reg_rating": reg_model_prediction[0] if reg_model_prediction is not None else None,
     "class_rating": class_model_prediction[0] if class_model_prediction is not None else None,
