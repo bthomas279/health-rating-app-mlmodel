@@ -5,7 +5,6 @@ from __future__ import annotations #Allows string-based type hints
 import base64
 import io
 from collections import Counter,  defaultdict
-from typing import TYPE_CHECKING
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -143,8 +142,12 @@ def categorical_plot(data: list[dict]) -> str:
         Rating types are organized by severity
 
     """
+    #Counter that calculates the number of ratings in each category.
+    #Counts how many times each category string appears across all rows.
+    count_mapping = Counter(row.classification_ratings for row in data if row.classification_ratings is not None)
+
     #Create the order sequence of the plot
-    ORDER = ["Poor", "Fair", "Good"]
+    ORDER = ["Low", "Fair", "Good"]
     #Create the color map of the keys (Red, Yellow, Green)
     COLOR_MAP = {
         "Low": "#d73027",
@@ -152,20 +155,21 @@ def categorical_plot(data: list[dict]) -> str:
         "Good": "#8aea6f",
      }
 
-    #Counter that calculates the number of ratings in each category.
-    #Counts how many times each category string appears across all rows.
-    count_mapping = Counter(row.classification_ratings for row in data if row.classification_ratings is not None)
-
     #Calculate the categories
     categories = [rate for rate in ORDER if rate in count_mapping] + \
                  [rate for rate in count_mapping if rate not in ORDER]
     
+    #Guardrail if every row is None. prevents max([]) from crashing if counts_map is empty
+    if not categories:
+        raise ValueError("No valid classification ratings values found in data.")
+
+
     #Create parallel lists
     counts = [count_mapping[rate] for rate in categories]
 
     #Connect the map and categroies together to their proper values if known
     #else, fall back to the dark blue color (unlikely)
-    graph_colors = COLOR_MAP[:len(categories)] if len(categories) <= 5 else ["#4C72B0"] * len(categories)
+    graph_colors = [COLOR_MAP.get(rate, "#4C72B0") for rate in categories]
 
     #Config the plot
     view, axis = plt.subplots(figsize=(8, max(3, len(categories) * 0.8)))
@@ -176,7 +180,7 @@ def categorical_plot(data: list[dict]) -> str:
         axis.text(bar.get_width() + 0.15, bar.get_y() + bar.get_height() / 2,
                 str(count), va="center", fontsize=10)
  
-    #Increase the \in-between space of the x-axis by 15%
+    #Increase the in-between space of the x-axis by 15%
     axis.set_xlim(0, max(counts) * 1.15)
     #Create the plot with the default settings
     default_style(view, axis,
@@ -186,57 +190,76 @@ def categorical_plot(data: list[dict]) -> str:
     return base_transfer(view)
 
 
-
-
 #CHECK EVERYTHING BELOW (I DID NOT LOOK AT THIS)
-
 
 
 def sleep_hours_plot(data: list[dict]) -> str:
     """
-    Histogram of sleep_hours with a recommended-range band.
- 
-    Reads: row.sleep_hours (float | None)
-    Skips rows where sleep_hours is None.
+    Creates a histogram of sleep_hours with a recommended-range highlight. This shows
+    sleep hours for specific dates
+    
     """
-    hours = [r.sleep_hours for r in data if r.sleep_hours is not None]
+    #Grab the hours of sleep that are not null
+    rows = [r for r in data if r.sleep_hours is not None]
+
+    #Group by the date, with one average sleep hour per date (if there's somehow more than one)
+    dates, hours = date_grouping(rows, "sleep_hours")
+
+    #Create the x-axis (by date) and vertical bars
+    x_positions = range(len(dates))
+    view, axis = plt.subplots(figsize=(8, 3))
+    axis.bar(x_positions, hours, color="#5B8DB8", edgecolor="white",
+        linewidth=0.5, width=0.4)
  
-    fig, ax = plt.subplots(figsize=(8, 4))
-    ax.hist(hours, bins=10, color="#5B8DB8", edgecolor="white", linewidth=0.7)
+    #Create a highlighted horizontal range of recommended sleep (7-9 hours)
+    axis.axhspan(7, 9, alpha=0.15, color="#2ca02c", label="Recommended (7–9 hrs)")
+    axis.legend(fontsize=9)
+
+    #Create and place the date labels on x-axis
+    axis.set_xticks(x_positions)
+    axis.set_xticklabels(dates, rotation=45, ha="right", fontsize=8)
+
+    #Y-axis' limit (starts at 0 and 20% headroom above the tallest bar)
+    #Go back to 10 if the list is empty
+    axis.set_ylim(0, max(hours) * 1.2 if hours else 12)
  
-    # Highlight the recommended 7-9 hour range
-    ax.axvspan(7, 9, alpha=0.15, color="#2ca02c", label="Recommended (7–9 hrs)")
-    ax.legend(fontsize=9)
- 
-    default_style(fig, ax,
+    #Build the plot with the default style
+    default_style(view, axis,
                 title="Sleep Hours Distribution",
-                xlabel="Hours of Sleep",
+                xlabel="Average Hours of Sleep",
                 ylabel="Number of Days")
-    return base_transfer(fig)
+    return base_transfer(view)
  
  
 def study_hours_plot(data: list[dict]) -> str:
     """
-    Line chart with a shaded area for study_hours over time.
+    Creates a line chart with a shaded area for study_hours over time.
  
-    Reads: row.study_hours (float | None), row.time (datetime)
-    Skips rows where study_hours is None.
     """
-    rows  = [r for r in data if r.study_hours is not None]
-    dates = [r.time.strftime("%Y-%m-%d") for r in rows]
-    hours = [r.study_hours for r in rows]
+    #Filter rows with no study hours (Unlikely but just in case)
+    rows  = [row for row in data if row.study_hours is not None]
+
+    #Group data by date and average study hours
+    dates, hours = date_grouping(rows, "study_hours")
  
-    fig, ax = plt.subplots(figsize=(9, 4))
-    ax.plot(dates, hours, marker="s", linewidth=2, color="#E07B39", markersize=5)
-    ax.fill_between(dates, hours, alpha=0.10, color="#E07B39")
+    #Determine the plot size x and y
+    view, axis = plt.subplots(figsize=(9, 4))
+
+    #Create the lineplot with square markers
+    axis.plot(dates, hours, marker="s", linewidth=2, color="#E07B39", markersize=5)
+    #Create the shaded area under the line plot
+    axis.fill_between(dates, hours, alpha=0.10, color="#E07B39")
+    #Set the axis ticks and rotation
+    axis.set_xticks(range(len(dates)))
+    axis.set_xticklabels(dates, rotation=45, ha="right", fontsize=8)
+    #Set the Y axis limit to extend 20% above the tallest point. 
+    #Go back to ten if the list is empty
+    axis.set_ylim(0, max(hours) * 1.2 if hours else 10)
  
-    ax.set_xticks(range(len(dates)))
-    ax.set_xticklabels(dates, rotation=45, ha="right", fontsize=8)
-    ax.set_ylim(0, max(hours) * 1.2 if hours else 10)
- 
-    default_style(fig, ax,
+    #Build the plot in the default style
+    default_style(view, axis,
                 title="Daily Study Hours Over Time",
                 xlabel="Date",
-                ylabel="Hours Studied")
-    return base_transfer(fig)
+                ylabel="Average Hours Studied")
+    return base_transfer(view)
  
