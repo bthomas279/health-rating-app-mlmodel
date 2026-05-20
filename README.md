@@ -5,7 +5,6 @@
 This repository houses the machine learning model for my student mental health rating system.
 This aspect of the project has two goals: to create machine learning models to predict the mental health of students, and to create user-tailored visualizations of specific data. Both of these features are then sent back to the main server to be viewed by the user.
 
-
 ## Features
 - Extracts user data information collected by Node.js to have the ML models predict current mental health.
 - Extracts user data information collected by Node.js to create Matplotlib visualizations.
@@ -30,7 +29,7 @@ visual_operations/
 ├──mental_rating_model.pkl          # Binary file of the regression ml model turned using joblib
 ├──class_mental_rating_model.pkl    # Binary file of the classification ml model turned using joblib
 ├──main.py                          # Contains FAST API to build model into API and run responses (also main file for vercel deployment)
-├──vercel.json                      # Source for vercel devployment
+├──vercel.json                      # Source for vercel deployment
 └──requirements.txt                 # Library requirements for deployment
 
 ```
