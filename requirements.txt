@@ -7,8 +7,3 @@ numpy
 datascience
 matplotlib
 python-dotenv
-sklearn
-os
-typing
-datetime
-dotenv
