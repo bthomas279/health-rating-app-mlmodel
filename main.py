@@ -8,10 +8,16 @@ from pydantic import BaseModel
 import pandas as pd
 from typing import Literal, Optional, List
 from datetime import datetime
+from dotenv import load_dotenv
 import os
 
 #Import chart functions
 from visual_operations.visuals import (numerical_plot, categorical_plot, sleep_hours_plot, study_hours_plot)
+
+
+#Define port
+load_dotenv()
+PORT = os.getenv("PORT")
 
 #Load ml models
 reg_model = joblib.load("mental_rating_model.pkl")
@@ -115,6 +121,6 @@ async def plot_development(request: PlotRequest):
 
 #Click the "run python file" button
 if __name__ == "__main__":
-    uvicorn.run("main:app", host = "127.0.0.1", port=8000, reload = True)
+    uvicorn.run("main:app", host = "127.0.0.1", port=PORT, reload = True)
 
 

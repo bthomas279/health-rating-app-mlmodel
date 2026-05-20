@@ -6,3 +6,5 @@ pandas
 numpy
 datascience
 matplotlib
+python-dotenv
+scikit-learn
