@@ -1,6 +1,6 @@
 #Code to create API
 #Imports
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import joblib
 import uvicorn
@@ -17,7 +17,7 @@ from visuals import (numerical_plot, categorical_plot, sleep_hours_plot, study_h
 
 #Define port
 load_dotenv()
-port = os.getenv("PORT")
+PORT = os.getenv("PORT")
 
 #Load ml models
 reg_model = joblib.load("mental_rating_model.pkl")
@@ -64,14 +64,6 @@ class PlotRequest(BaseModel):
     user_request: Literal["sleep", "study", "regRate", "classRate"]
     data: List[RowSelections]
 
-#Define valid types of strings and charts
-VALID_TYPES = {
-    "numerical_mental_health": numerical_plot,
-    "categorical_mental_health": categorical_plot,
-    "sleep_hours": sleep_hours_plot,
-    "study_hours": study_hours_plot,
-}
-
 #REQUESTS/RESPONSES------------------------------------
 #Runs the model (starts on button submission)
 @app.post("/predict/")
@@ -79,10 +71,6 @@ async def data_grab(request: PredictionRequest):
     
     #Change to dataframe (to match what model accepts)
     user_features_df = pd.DataFrame([request.data.dict()])
-
-    #Test the stuff gathered
-    print(user_features_df)
-    print(request.model_type)
 
     #Have the model make the mental health rating based on type
     #Only Regression
@@ -133,6 +121,6 @@ async def plot_development(request: PlotRequest):
 
 #Click the "run python file" button
 if __name__ == "__main__":
-    uvicorn.run("main:app", host = "127.0.0.1", port=8000, reload = True)
+    uvicorn.run("main:app", host = "127.0.0.1", port=PORT, reload = True)
 
 

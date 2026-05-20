@@ -1,0 +1,8 @@
+fastapi
+joblib
+uvicorn
+pydantic
+pandas
+numpy
+datascience
+matplotlib
