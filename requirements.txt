@@ -9,7 +9,6 @@ matplotlib
 python-dotenv
 sklearn
 os
-math
 typing
 datetime
 dotenv
