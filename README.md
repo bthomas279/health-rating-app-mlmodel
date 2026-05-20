@@ -1,15 +1,13 @@
 # Machine Learning Model of the Student Health Rating App Project
 **IMPORTANT NOTICE: This project is still under development.**
 
-Planned Development
-1. Model optimizations
-2. Classification Model
-
-
 ## About 
 This repository houses the machine learning model for my student mental health rating system.
+This aspect of the project has two goals: to create machine learning models to predict the mental health of students, and to create user-tailored visualizations. Both of these features are then sent back to the main server to be viewed by the user.
 
 ## Features
+- Extracts user data information collected by Node.js to have the ML models predict current mental health.
+- Extracts user data information collected by Node.js to create Matplotlib visualizations.
 
 ## Project Structure
 ```
@@ -19,12 +17,21 @@ datasets/
 ├──quant_health_dataset.csv         # health_dataset.csv but only containing relevent columns and str are now float or int.
 └──reduced_health_dataset.csv       # health_dataset.csv but only containing relevent columns.
 
-├──mental_rating_model.pkl          # Binary file of the ml model turned using joblib
+model_operations/
+├──classification_model.ipynb       # Code for the Random Forest Classifier Model
 ├──regression_model.ipynb           # Code for the Random Forest Regressor Model
-├──main.py                          # Contains FAST API to build model into API
 └──scoring_norm.ipynb               # Houses the code that normalized health_dataset.csv (weights, relevent columns).
+
+visual_operations/
+└──visuals.py                       #Code to develop/design user visuals, and prepare them for response sending
+
+├──mental_rating_model.pkl          # Binary file of the regression ml model turned using joblib
+├──class_mental_rating_model.pkl    # Binary file of the classification ml model turned using joblib
+├──main.py                          # Contains FAST API to build model into API and run responses (also main file for vercel deployment)
+├──vercel.json                      # Source for vercel devployment
+└──requirements.txt                 # Library requirements for deployment
 
 ```
 
 ## Programmer
-This repository is being developed by Benjamin Thomas as a part of a personal project.
+This repository was developed by Benjamin Thomas as a part of a personal project.

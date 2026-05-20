@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 import os
 
 #Import chart functions
-from visuals import (numerical_plot, categorical_plot, sleep_hours_plot, study_hours_plot)
+from visual_operations.visuals import (numerical_plot, categorical_plot, sleep_hours_plot, study_hours_plot)
 
 
 #Define port
