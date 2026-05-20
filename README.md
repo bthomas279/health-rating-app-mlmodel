@@ -6,9 +6,9 @@ This repository houses the machine learning model for my student mental health r
 This aspect of the project has two goals: to create machine learning models to predict the mental health of students, and to create user-tailored visualizations of specific data. Both of these features are then sent back to the main server to be viewed by the user.
 
 ## Features
-- Extracts user data information collected by Node.js to have the ML models predict current mental health.
-- Extracts user data information collected by Node.js to create Matplotlib visualizations.
-- Extraction and reponses are performed by a serverless FastAPI server.
+- Grabs user data information collected by Node.js to have the ML models predict current mental health.
+- Grabs user data information collected by Node.js to create Matplotlib visualizations.
+- Extraction and responses are performed by a serverless FastAPI server.
 
 ## Project Structure
 ```
