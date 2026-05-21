@@ -226,8 +226,8 @@ def sleep_hours_plot(data: list[dict]) -> str:
     #Build the plot with the default style
     default_style(view, axis,
                 title="Sleep Hours Distribution",
-                xlabel="Average Hours of Sleep",
-                ylabel="Number of Days")
+                xlabel="Dates",
+                ylabel="Hours of Sleep")
     return base_transfer(view)
  
  
